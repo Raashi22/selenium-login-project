@@ -1,0 +1,22 @@
+{
+  "name": "selenium-login-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/loginTest.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "chromedriver": "^147.0.4",
+    "express": "^5.2.1",
+    "mongoose": "^9.5.0",
+    "selenium-webdriver": "^4.43.0",
+    "wait-on": "^9.0.5"
+  }
+}
