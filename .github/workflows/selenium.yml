@@ -1,0 +1,31 @@
+name: Selenium MongoDB Test
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start server
+      run: node server.js &
+
+    - name: Wait for server
+      run: npx wait-on http://localhost:3000
+
+    - name: Run Selenium test
+      run: npm test
