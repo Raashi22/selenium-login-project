@@ -13,6 +13,13 @@ pipeline {
             }
         }
 
+        stage('Start Server') {
+            steps {
+                sh 'node server.js &'
+                sh 'sleep 5'
+            }
+        }
+
         stage('Run Tests') {
             steps {
                 sh 'npm test'
