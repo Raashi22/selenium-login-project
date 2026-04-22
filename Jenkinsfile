@@ -25,6 +25,15 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub') {
+    steps {
+        sh '''
+        docker tag selenium-app raashii/selenium-app
+        docker push raashii/selenium-app
+        '''
+    }
+}
+
         stage('Run Container') {
             steps {
                 sh '''
