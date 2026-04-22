@@ -1,31 +1,36 @@
 name: Selenium MongoDB Test
 
 on:
-  push:
-    branches: [ main ]
+ push:
+  branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
 
-    steps:
+ test:
 
-    - name: Checkout code
-      uses: actions/checkout@v4
+  runs-on: ubuntu-latest
 
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
+  steps:
 
-    - name: Install dependencies
-      run: npm install
+  - name: Checkout code
+    uses: actions/checkout@v4
 
-    - name: Start server
-      run: node server.js &
+  - name: Setup Node
+    uses: actions/setup-node@v4
+    with:
+     node-version: 18
 
-    - name: Wait for server
-      run: npx wait-on http://localhost:3000
+  - name: Install dependencies
+    run: npm install
 
-    - name: Run Selenium test
-      run: npm test
+  - name: Install wait-on
+    run: npm install wait-on
+
+  - name: Start server
+    run: node server.js &
+
+  - name: Wait for server
+    run: npx wait-on http://localhost:3000
+
+  - name: Run selenium test
+    run: npm test

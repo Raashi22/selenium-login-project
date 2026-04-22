@@ -1,46 +1,108 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(__dirname));
 
-mongoose.connect("mongodb+srv://raashi:raashidb@cluster0.zzczpqb.mongodb.net/logindb");
+
+/*
+MongoDB connection
+Uses Atlas URL locally
+Also works in CI
+*/
+
+const MONGO_URL =
+process.env.MONGO_URL ||
+"mongodb+srv://raashi:raashidb@cluster0.zzczpqb.mongodb.net/logindb?retryWrites=true&w=majority";
+
+mongoose.connect(MONGO_URL)
+
+.then(()=>{
+
+console.log("MongoDB connected");
+
+})
+
+.catch((err)=>{
+
+console.log("MongoDB connection error:");
+console.log(err);
+
+});
+
+
+/*
+Create schema
+*/
 
 const UserSchema = new mongoose.Schema({
 
-username:String,
-password:String
+username: String,
+password: String
 
 });
 
 const User = mongoose.model("User", UserSchema);
 
+
+/*
+Login API
+*/
+
 app.post("/login", async (req,res)=>{
 
-let user = await User.findOne({
+try{
 
-username:req.body.username,
-password:req.body.password
+const user = await User.findOne({
+
+username: req.body.username,
+password: req.body.password
 
 });
 
 if(user){
 
-res.json({message:"Login Successful"});
+res.json({
 
-}else{
+message:"Login Successful"
 
-res.json({message:"Invalid Credentials"});
+});
+
+}
+else{
+
+res.json({
+
+message:"Invalid Credentials"
+
+});
+
+}
+
+}
+catch(error){
+
+res.json({
+
+message:"Server Error"
+
+});
 
 }
 
 });
 
-app.listen(3000, ()=>{
 
-console.log("server running on port 3000");
+/*
+Start server
+*/
+
+const PORT = 3000;
+
+app.listen(PORT, ()=>{
+
+console.log("Server running on port " + PORT);
 
 });
