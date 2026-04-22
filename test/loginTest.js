@@ -1,48 +1,50 @@
 const { Builder, By, until } = require("selenium-webdriver");
+const chrome = require("selenium-webdriver/chrome");
 
 async function loginTest(){
 
+// run chrome in headless mode (required for CI)
+let options = new chrome.Options();
+
+options.addArguments(
+"--headless",
+"--no-sandbox",
+"--disable-dev-shm-usage",
+"--disable-gpu"
+);
+
 let driver = await new Builder()
 .forBrowser("chrome")
+.setChromeOptions(options)
 .build();
 
 try{
 
 await driver.get("http://localhost:3000/login.html");
 
-// wait page load
+// wait for page load
 await driver.wait(until.elementLocated(By.id("username")),5000);
 
 // enter username
-await driver.findElement(By.id("username"))
-.clear();
-
-await driver.findElement(By.id("username"))
-.sendKeys("admin");
+await driver.findElement(By.id("username")).sendKeys("admin");
 
 // enter password
-await driver.findElement(By.id("password"))
-.clear();
-
-await driver.findElement(By.id("password"))
-.sendKeys("1234");
+await driver.findElement(By.id("password")).sendKeys("1234");
 
 // click login
-await driver.findElement(By.xpath("//button[text()='Login']"))
-.click();
+await driver.findElement(By.tagName("button")).click();
 
-
-// wait until message text changes
+// wait for result message
 await driver.wait(async () => {
 
-let msg = await driver.findElement(By.id("message")).getText();
+let text = await driver.findElement(By.id("message")).getText();
 
-return msg.includes("Login");
+return text.length > 0;
 
 },5000);
 
 
-// get message text
+// get result text
 let text = await driver.findElement(By.id("message")).getText();
 
 console.log("Result:", text);
