@@ -13,12 +13,15 @@ pipeline {
             }
         }
 
+        
         stage('Start Server') {
-            steps {
-                sh 'node server.js &'
-                sh 'sleep 5'
-            }
-        }
+    steps {
+        sh '''
+        nohup node server.js > server.log 2>&1 &
+        sleep 5
+        '''
+    }
+}
 
         stage('Run Tests') {
             steps {
@@ -33,9 +36,13 @@ pipeline {
         }
 
         stage('Run Container') {
-            steps {
-                sh 'docker run -d -p 3000:3000 selenium-app'
-            }
-        }
+    steps {
+        sh '''
+        docker stop selenium-container || true
+        docker rm selenium-container || true
+        docker run -d -p 3000:3000 --name selenium-container selenium-app
+        '''
+    }
+}
     }
 }
