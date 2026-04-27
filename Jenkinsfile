@@ -13,6 +13,13 @@ pipeline {
             }
         }
 
+        stage('Start Server') {
+            steps {
+                sh 'nohup node server.js > server.log 2>&1 &'
+                sh 'sleep 5'
+            }
+        }
+
         stage('Run Tests') {
             steps {
                 sh 'npm test'
@@ -26,13 +33,13 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-    steps {
-        sh '''
-        docker tag selenium-app raashii/selenium-app
-        docker push raashii/selenium-app
-        '''
-    }
-}
+            steps {
+                sh '''
+                docker tag selenium-app raashii/selenium-app
+                docker push raashii/selenium-app
+                '''
+            }
+        }
 
         stage('Run Container') {
             steps {
