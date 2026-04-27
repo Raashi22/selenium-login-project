@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selenium-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: selenium-app
+  template:
+    metadata:
+      labels:
+        app: selenium-app
+    spec:
+      containers:
+        - name: selenium-app
+          image: raashii/selenium-app
+          ports:
+            - containerPort: 3000
